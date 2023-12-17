@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIT 725 Prac 3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="pink lighten-5">
+    <nav>
+        <div class="nav-wrapper navbar-size">
+            <a href="#" class="brand-logo"><img class="user-image-size" src="images/user.png" /></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a target="_blank" href="https://www.linkedin.com/in/navit-choudhary-5133b9104/">LinkedIn</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-body">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h1 id="heading">Welcome to SIT 725 Week 3</h1>
+                </div>
+                <div class="col s12 center-align">
+                    <img class="materialboxed materialboxed-image" src="images/livedemo.png">
+                </div>
+                <div class="col s12 center-align">
+                    <a class="waves-effect waves-light btn modal-trigger" href="#modal1"><i class="material-icons left">auto_fix_high</i>Open Form</a>
+                    <a class="waves-effect waves-light btn click-me-button" id="clickMeButton"><i class="material-icons left">auto_fix_high</i>Click Me</a>
+                </div>
+            </div>
+
+            <div class="row" id="cardsContainerRow">
+                <div id="cardsContainer" class="col s12 center-align">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>EV Driver Details</h4>
+            <form id="driverForm" action="/submit-form" method="post">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="first_name" type="text" class="validate" name="first_name">
+                        <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate" name="last_name">
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="email" type="email" class="validate" name="email">
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="message" class="materialize-textarea" name="message"></textarea>
+                        <label for="message">Message</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.materialboxed').materialbox();
+            $('.modal').modal();
+
+            const cardList = [
+                {
+                    title: "Kitten 1",
+                    image: "images/kitten1.jpg",
+                    link: "About Kitten 1",
+                    description: "Demo description about kitten 2"
+                },
+                {
+                    title: "Kitten 2",
+                    image: "images/kitten2.jpg",
+                    link: "About Kitten 2",
+                    description: "Demo description about kitten 3"
+                }
+            ];
+
+            const addCards = (items) => {
+                const cardsContainer = $("#cardsContainer"); // Assuming this is the container for cards
+
+                items.forEach(item => {
+                    let itemToAppend = `<div class="col s12 m6">
+                        <div class="card">
+                            <div class="card-image waves-effect waves-block waves-light">
+                                <img class="activator" src="${item.image}">
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title activator grey-text text-darken-4">${item.title}<i class="material-icons right">more_vert</i></span>
+                                <p><a href="#">${item.link}</a></p>
+                            </div>
+                            <div class="card-reveal">
+                                <span class="card-title grey-text text-darken-4">${item.title}<i class="material-icons right">close</i></span>
+                                <p class="card-text">${item.description}</p>
+                            </div>
+                        </div>
+                    </div>`;
+                    cardsContainer.append(itemToAppend);
+                });
+            }
+
+            const getAllCats = () => {
+                $.get('/api/cats', (response) => {
+                    if (response.statusCode === 200) {
+                        addCards(response.data);
+                    }
+                });
+            }
+
+            const formSubmitted = () => {
+                let formData = {};
+                formData.title = $('#title').val();
+                formData.subTitle = $('#subTitle').val();
+                formData.path = $('#path').val();
+                formData.description = $('#description').val();
+
+                console.log(formData);
+                postCat(formData);
+            }
+
+            const postCat = (cat) => {
+                $.ajax({
+                    url: '/api/cat',
+                    type: 'POST',
+                    data: cat,
+                    success: (result) => {
+                        if (result.statusCode === 201) {
+                            alert('Cat post successful');
+                            // Fetch cats again after successful post
+                            getAllCats();
+                        }
+                    }
+                });
+            }
+
+            $('#formSubmit').click(() => {
+                formSubmitted();
+            });
+
+            $('#clickMeButton').click(() => {
+                alert("Thanks for clicking me. Hope you have a nice day!")
+            });
+
+            getAllCats();
+        });
+    </script>
+</body>
+</html>
