@@ -1,0 +1,26 @@
+{
+    "name": "sit725-week3-prac",
+    "version": "1.0.0",
+    "description": "SIT 725 Week 3 practical project",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/denohkimkimaiyo/sit725-2021-t2-prac3"
+    },
+    "keywords": [
+        "Nodejs",
+        "Express",
+        "Materialize",
+        "HTML",
+        "JS",
+        "CSS"
+    ],
+    "author": "Dennis",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}
