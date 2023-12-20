@@ -43,6 +43,7 @@
         <div class="modal-content">
             <h4>EV Driver Details</h4>
             <form id="driverForm" action="/submit-form" method="post">
+                <!-- ... (existing form content) ... -->
                 <div class="row">
                     <div class="input-field col s6">
                         <input id="first_name" type="text" class="validate" name="first_name">
@@ -73,6 +74,7 @@
                     </div>
                 </div>
             </form>
+            </form>
         </div>
     </div>
 
@@ -83,23 +85,8 @@
             $('.materialboxed').materialbox();
             $('.modal').modal();
 
-            const cardList = [
-                {
-                    title: "Kitten 1",
-                    image: "images/kitten1.jpg",
-                    link: "About Kitten 1",
-                    description: "Demo description about kitten 2"
-                },
-                {
-                    title: "Kitten 2",
-                    image: "images/kitten2.jpg",
-                    link: "About Kitten 2",
-                    description: "Demo description about kitten 3"
-                }
-            ];
-
             const addCards = (items) => {
-                const cardsContainer = $("#cardsContainer"); // Assuming this is the container for cards
+                const cardsContainer = $("#cardsContainer");
 
                 items.forEach(item => {
                     let itemToAppend = `<div class="col s12 m6">
@@ -121,14 +108,23 @@
                 });
             }
 
-            const getAllCats = () => {
-                $.get('/api/cats', (response) => {
-                    if (response.statusCode === 200) {
-                        addCards(response.data);
-                    }
-                });
-            }
+            const cardList = [
+                {
+                    title: "Kitten 1",
+                    image: "images/kitten1.jpg",
+                    link: "About Kitten 1",
+                    description: "Demo description about kitten 1"
+                },
+                {
+                    title: "Kitten 2",
+                    image: "images/kitten2.jpg",
+                    link: "About Kitten 2",
+                    description: "Demo description about kitten 2"
+                }
+            ];
 
+            addCards(cardList);
+            
             const formSubmitted = () => {
                 let formData = {};
                 formData.title = $('#title').val();
@@ -148,7 +144,6 @@
                     success: (result) => {
                         if (result.statusCode === 201) {
                             alert('Cat post successful');
-                            // Fetch cats again after successful post
                             getAllCats();
                         }
                     }
@@ -162,8 +157,6 @@
             $('#clickMeButton').click(() => {
                 alert("Thanks for clicking me. Hope you have a nice day!")
             });
-
-            getAllCats();
         });
     </script>
 </body>
